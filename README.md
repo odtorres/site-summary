@@ -7,5 +7,5 @@
 
 ## Test 
 ```
-curl --data "https://github.com/pnpm/pnpm" http://localhost:1337/
+curl --data "http://someUrl" http://localhost:1337/
 ```
