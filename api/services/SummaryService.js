@@ -25,6 +25,8 @@ module.exports = {
                     var $ = res.$
                     let images = []
                     const currentUrl = url.parse(res.options.uri)
+                    let text = SummaryService.siteSummaryText({ $: $, url: currentUrl.hostname })
+                    
                     $("img").each((index, e) => {
                         if (res.options.uri && e.attribs.src) {
                             images.push(url.resolve(res.options.uri, e.attribs.src))
@@ -32,8 +34,17 @@ module.exports = {
                     })
 
                     done({
-                        image: images[0],
-                        text: SummaryService.siteSummaryText({ $: $, url: currentUrl.hostname })
+                        date_published: text.time,
+                        lead_image_url: images[0],
+                        url: res.options.uri,//currentUrl.href,
+                        next_page_url: null,
+                        rendered_pages: 1,
+                        rendered_pages: 1,
+                        total_pages: 1,
+                        title: text.title,
+                        author: text.author,
+                        content: text.resume,
+                        word_count: text.all.length//TODO:fix that shit
                     })//images.slice(0, 4)
                 } catch (ex) {
                     sails.log(ex)
@@ -71,6 +82,7 @@ module.exports = {
         textSection.article = SummaryService.sectionSummaryText({ $: $, section: "article" })
         textSection.content = SummaryService.sectionSummaryText({ $: $, section: '[class*="content"]' })
         textSection.p = SummaryService.sectionSummaryText({ $: $, section: "p" })
+        textSection.all = SummaryService.sectionSummaryText({ $: $, section: "*" })
 
         textSummary.time = (textSection.time.length > 0) ? textSection.time[0] :
             (textSection.date.length > 0) ? textSection.date[0] :
@@ -94,6 +106,7 @@ module.exports = {
                 )*/
             )
         )
+        textSummary.all = textSection.all
         //sails.log(textSummary.resume);
         /* textSummary.resume = (textSection.article.length > 0) ? textSection.article[0].substring(0, 150) :
              (textSection.content.length > 0) ? textSection.content[0].substring(0, 150) :
@@ -124,6 +137,6 @@ module.exports = {
     biggerText: function (array = []) {
         return array.sort((e1, e2) => {
             return e2.length - e1.length
-        })[0].substring(0, 150)+" ..."
+        })[0].substring(0, 150) + " ..."
     }
 }
