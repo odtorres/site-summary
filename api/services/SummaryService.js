@@ -26,7 +26,7 @@ module.exports = {
                     let images = []
                     const currentUrl = url.parse(res.options.uri)
                     let text = SummaryService.siteSummaryText({ $: $, url: currentUrl.hostname })
-                    
+
                     $("img").each((index, e) => {
                         if (res.options.uri && e.attribs.src) {
                             images.push(url.resolve(res.options.uri, e.attribs.src))
@@ -135,8 +135,12 @@ module.exports = {
         return textSumary
     },
     biggerText: function (array = []) {
-        return array.sort((e1, e2) => {
-            return e2.length - e1.length
-        })[0].substring(0, 150) + " ..."
+        sails.log(array)
+        if (array.length > 0)
+            return array.sort((e1, e2) => {
+                return e2.length - e1.length
+            })[0].substring(0, 150) + " ..."
+        else
+            return ""
     }
 }
