@@ -16,5 +16,16 @@ module.exports = {
         } else {
             res.json("Please give me some url")
         }
+    },
+    full: function (req, res) {
+        let params = req.allParams()
+        if (params.url) {
+            sails.log(params.url)
+            FullSourceService.getFullSource({ url: params.url }, (result) => {
+                return res.ok(result)
+            })
+        } else {
+            res.ok("Please give me some url")
+        }
     }
 }
