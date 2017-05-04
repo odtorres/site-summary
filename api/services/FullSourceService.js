@@ -25,22 +25,30 @@ module.exports = {
                     let images = []
                     const currentUrl = url.parse(res.options.uri)
                     $("a").each((index, e) => {
-                        let goodUrl = url.resolve(res.options.uri, e.attribs.href)
-                        e.attribs.href = goodUrl
-                        e.attribs.target = "_blank"
+                        if (res.options.uri && e.attribs.href) {
+                            let goodUrl = url.resolve(res.options.uri, e.attribs.href)
+                            e.attribs.href = goodUrl
+                            e.attribs.target = "_blank"
+                        }
                     })
                     $("link").each((index, e) => {
-                        let goodUrl = url.resolve(res.options.uri, e.attribs.href)
-                        e.attribs.href = goodUrl
+                        if (res.options.uri && e.attribs.href) {
+                            let goodUrl = url.resolve(res.options.uri, e.attribs.href)
+                            e.attribs.href = goodUrl
+                        }
                     })
                     $("img").each((index, e) => {
-                        let goodUrl = url.resolve(res.options.uri, e.attribs.src)
-                        e.attribs.src = goodUrl
+                        if (res.options.uri && e.attribs.src) {
+                            let goodUrl = url.resolve(res.options.uri, e.attribs.src)
+                            e.attribs.src = goodUrl
+                        }
                     })
                     $("script").each((index, e) => {
-                        let goodUrl = url.resolve(res.options.uri, e.attribs.src)
-                        if(e.attribs.src)
-                            e.attribs.src = goodUrl
+                        if (res.options.uri && e.attribs.src) {
+                            let goodUrl = url.resolve(res.options.uri, e.attribs.src)
+                            if (e.attribs.src)
+                                e.attribs.src = goodUrl
+                        }
                     })
                     done($.html())
                     // $.html() -- aca todo el html 
