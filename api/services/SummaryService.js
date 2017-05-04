@@ -33,20 +33,24 @@ module.exports = {
                             images.push(url.resolve(res.options.uri, e.attribs.src))
                         }
                     })
+                    FullSourceService.getFullSource({ url: options.url }, (result) => {
+                        
+                        done({
+                            date_published: text.time,//fix that
+                            lead_image_url: images[0],
+                            url: res.options.uri,//currentUrl.href,
+                            next_page_url: null,
+                            rendered_pages: 1,
+                            rendered_pages: 1,
+                            total_pages: 1,
+                            title: text.title,
+                            author: text.author,
+                            resume: text.resume,
+                            content: JSON.stringify(result),
+                            word_count: text.all.length//TODO:fix that shit
+                        })
+                    })
 
-                    done({
-                        date_published: text.time,//fix that
-                        lead_image_url: images[0],
-                        url: res.options.uri,//currentUrl.href,
-                        next_page_url: null,
-                        rendered_pages: 1,
-                        rendered_pages: 1,
-                        total_pages: 1,
-                        title: text.title,
-                        author: text.author,
-                        content: text.resume,
-                        word_count: text.all.length//TODO:fix that shit
-                    })//images.slice(0, 4)
                 } catch (ex) {
                     sails.log(ex)
                     done("Server Error")
@@ -107,7 +111,7 @@ module.exports = {
                 )*/
             )
         )
-        textSummary.all = textSection.all        
+        textSummary.all = textSection.all
         /* textSummary.resume = (textSection.article.length > 0) ? textSection.article[0].substring(0, 150) :
              (textSection.content.length > 0) ? textSection.content[0].substring(0, 150) :
                  (textSection.p.length > 0) ? textSection.p[0].substring(0, 150) :
@@ -142,22 +146,22 @@ module.exports = {
             $("time").each((index, e) => {
                 if (e.attribs.datetime) {
                     textSumary.push(e.attribs.datetime)
-                    sails.log("time: ",e.attribs.datetime)
+                    sails.log("time: ", e.attribs.datetime)
                 } else {
                     let text = $(e).text().trim()
                         .replace(new RegExp("\n", "g"), "")
                         .replace(new RegExp("\t", "g"), "")
                         .replace(new RegExp("  ", "g"), " ")
-                    if (text != ""){
+                    if (text != "") {
                         textSumary.push(text)
-                        sails.log("time: ",text)
+                        sails.log("time: ", text)
                     }
                 }
             })
         }
         return textSumary
     },
-    biggerText: function (array = []) {        
+    biggerText: function (array = []) {
         if (array.length > 0)
             return array.sort((e1, e2) => {
                 return e2.length - e1.length
