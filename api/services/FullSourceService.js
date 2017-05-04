@@ -43,6 +43,12 @@ module.exports = {
                             e.attribs.src = goodUrl
                         }
                     })
+                    $("iframe").each((index, e) => {
+                        if (res.options.uri && e.attribs.src) {
+                            let goodUrl = url.resolve(res.options.uri, e.attribs.src)
+                            e.attribs.src = goodUrl
+                        }
+                    })
                     $("script").each((index, e) => {
                         if (res.options.uri && e.attribs.src) {
                             let goodUrl = url.resolve(res.options.uri, e.attribs.src)

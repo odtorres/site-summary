@@ -45,7 +45,7 @@ module.exports = {
                             total_pages: 1,
                             title: text.title,
                             author: text.author,
-                            resume: text.resume,
+                            userSynopsis: text.resume,
                             content: result,
                             keywords: text.keywords,
                             word_count: text.all.length//TODO:fix that shit
