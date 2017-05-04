@@ -70,6 +70,7 @@ module.exports = {
         let textSection = {}
         let textSummary = {}
         //title
+        textSection.metaTitle = SummaryService.sectionMeta({ $: $, section: "title" })
         textSection.h1 = SummaryService.sectionSummaryText({ $: $, section: "h1" })
         textSection.h2 = SummaryService.sectionSummaryText({ $: $, section: "h2" })
         textSection.h3 = SummaryService.sectionSummaryText({ $: $, section: "h3" })
@@ -101,23 +102,24 @@ module.exports = {
             (textSection.author[0]) ? textSection.author[0].substring(0, 50) :
                 options.url
 
-        textSummary.title = (textSection.h1.length > 0) ? textSection.h1[0] :
-            (textSection.h2.length > 0) ? textSection.h2[0] :
-                (textSection.h3.length > 0) ? textSection.h3[0] :
-                    (textSection.h4.length > 0) ? textSection.h4[0] : ""
+        textSummary.title = (textSection.metaTitle.length > 0) ? textSection.metaTitle[0] :
+            (textSection.h1.length > 0) ? textSection.h1[0] :
+                (textSection.h2.length > 0) ? textSection.h2[0] :
+                    (textSection.h3.length > 0) ? textSection.h3[0] :
+                        (textSection.h4.length > 0) ? textSection.h4[0] : ""
 
         textSummary.resume = (textSection.metaDescription.length > 0) ? textSection.metaDescription[0] :
-        SummaryService.biggerText(
-            textSection.article.concat(
-                textSection.p/*.concat(
+            SummaryService.biggerText(
+                textSection.article.concat(
+                    textSection.p/*.concat(
                     textSection.summary.concat(
                         textSection.blockquote.concat(
                             textSection.content
                         )
                     )
                 )*/
+                )
             )
-        )
 
         textSummary.all = textSection.all
 
@@ -168,7 +170,7 @@ module.exports = {
         let textSumary = []
         $("meta").each((index, e) => {
             if (e.attribs.name && options.section.toLowerCase() == e.attribs.name.toLowerCase()) {
-                textSumary.push(e.attribs.content) 
+                textSumary.push(e.attribs.content)
             }
         })
 
