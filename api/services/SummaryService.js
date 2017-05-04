@@ -169,17 +169,17 @@ module.exports = {
         let $ = options.$
         let textSumary = []
         $("meta").each((index, e) => {
-            if (e.attribs.name) {
-                if (options.section.toLowerCase() == e.attribs.name.toLowerCase()) {
-                    textSumary.push(e.attribs.content)
-                } else if (e.attribs.name.toLowerCase().indexOf(options.section.toLowerCase())!=-1){
-                     textSumary.push(e.attribs.content)
-                } else if (e.attribs.property.toLowerCase().indexOf(options.section.toLowerCase())!=-1){
-                     textSumary.push(e.attribs.content)
-                } else if (e.attribs.itemprop.toLowerCase().indexOf(options.section.toLowerCase())!=-1){
-                     textSumary.push(e.attribs.content)
-                }
+
+            if (e.attribs.name && options.section.toLowerCase() == e.attribs.name.toLowerCase()) {
+                textSumary.push(e.attribs.content)
+            } else if (e.attribs.name && e.attribs.name.toLowerCase().indexOf(options.section.toLowerCase()) != -1) {
+                textSumary.push(e.attribs.content)
+            } else if (e.attribs.property && e.attribs.property.toLowerCase().indexOf(options.section.toLowerCase()) != -1) {
+                textSumary.push(e.attribs.content)
+            } else if (e.attribs.itemprop && e.attribs.itemprop.toLowerCase().indexOf(options.section.toLowerCase()) != -1) {
+                textSumary.push(e.attribs.content)
             }
+
         })
 
         return textSumary
