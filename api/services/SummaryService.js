@@ -46,7 +46,7 @@ module.exports = {
                             title: text.title,
                             author: text.author,
                             resume: text.resume,
-                            content: JSON.stringify(result),
+                            content: result,
                             keywords: text.keywords,
                             word_count: text.all.length//TODO:fix that shit
                         })
