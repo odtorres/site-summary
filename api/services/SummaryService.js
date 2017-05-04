@@ -34,7 +34,7 @@ module.exports = {
                         }
                     })
                     FullSourceService.getFullSource({ url: options.url }, (result) => {
-                        
+
                         done({
                             date_published: text.time,//fix that
                             lead_image_url: images[0],
@@ -47,6 +47,7 @@ module.exports = {
                             author: text.author,
                             resume: text.resume,
                             content: JSON.stringify(result),
+                            keywords: text.keywords,
                             word_count: text.all.length//TODO:fix that shit
                         })
                     })
@@ -80,8 +81,11 @@ module.exports = {
         textSection.allDate = SummaryService.sectionSummaryText({ $: $, section: '[class*="date"]' })
 
         //author
+        textSection.metaAuthor = SummaryService.sectionMeta({ $: $, section: "author" })
         textSection.author = SummaryService.sectionSummaryText({ $: $, section: '[class*="author"]' })
 
+        // description
+        textSection.metaDescription = SummaryService.sectionMeta({ $: $, section: "description" })
         textSection.summary = SummaryService.sectionSummaryText({ $: $, section: "summary" })
         textSection.blockquote = SummaryService.sectionSummaryText({ $: $, section: "blockquote" })
         textSection.article = SummaryService.sectionSummaryText({ $: $, section: "article" })
@@ -93,14 +97,17 @@ module.exports = {
             (textSection.date.length > 0) ? textSection.date[0] :
                 (textSection.allDate.length > 0) ? textSection.allDate[0] : "")
 
-        textSummary.author = (textSection.author[0]) ? textSection.author[0].substring(0, 50) : options.url
+        textSummary.author = (textSection.metaAuthor.length > 0) ? textSection.metaAuthor[0] :
+            (textSection.author[0]) ? textSection.author[0].substring(0, 50) :
+                options.url
 
         textSummary.title = (textSection.h1.length > 0) ? textSection.h1[0] :
             (textSection.h2.length > 0) ? textSection.h2[0] :
                 (textSection.h3.length > 0) ? textSection.h3[0] :
                     (textSection.h4.length > 0) ? textSection.h4[0] : ""
 
-        textSummary.resume = SummaryService.biggerText(
+        textSummary.resume = (textSection.metaDescription.length > 0) ? textSection.metaDescription[0] :
+        SummaryService.biggerText(
             textSection.article.concat(
                 textSection.p/*.concat(
                     textSection.summary.concat(
@@ -111,16 +118,11 @@ module.exports = {
                 )*/
             )
         )
+
         textSummary.all = textSection.all
-        /* textSummary.resume = (textSection.article.length > 0) ? textSection.article[0].substring(0, 150) :
-             (textSection.content.length > 0) ? textSection.content[0].substring(0, 150) :
-                 (textSection.p.length > 0) ? textSection.p[0].substring(0, 150) :
-                     (textSection.summary.length > 0) ? textSection.summary[0].substring(0, 150) :
-                         (textSection.blockquote.length > 0) ? textSection.blockquote[0].substring(0, 150) :
-                             ""*/
-        /*(textSection.div.length > 0) ? textSection.div[0].substring(0,150) : 
-        (textSection.all.length > 0) ? textSection.all[0].substring(0,150) : ""*/
-        //return textSection
+
+        textSummary.keywords = SummaryService.sectionMeta({ $: $, section: "keywords" })
+
         return textSummary
     },
     sectionSummaryText: function (options, done) {
@@ -159,6 +161,17 @@ module.exports = {
                 }
             })
         }
+        return textSumary
+    },
+    sectionMeta: function (options, done) {
+        let $ = options.$
+        let textSumary = []
+        $("meta").each((index, e) => {
+            if (e.attribs.name && options.section.toLowerCase() == e.attribs.name.toLowerCase()) {
+                textSumary.push(e.attribs.content) 
+            }
+        })
+
         return textSumary
     },
     biggerText: function (array = []) {
