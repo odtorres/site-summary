@@ -71,6 +71,7 @@ module.exports = {
         let textSummary = {}
         //title
         textSection.metaTitle = SummaryService.sectionMeta({ $: $, section: "title" })
+        textSection.title = SummaryService.sectionSummaryText({ $: $, section: "title" })
         textSection.h1 = SummaryService.sectionSummaryText({ $: $, section: "h1" })
         textSection.h2 = SummaryService.sectionSummaryText({ $: $, section: "h2" })
         textSection.h3 = SummaryService.sectionSummaryText({ $: $, section: "h3" })
@@ -103,10 +104,11 @@ module.exports = {
                 options.url
 
         textSummary.title = (textSection.metaTitle.length > 0) ? textSection.metaTitle[0] :
-            (textSection.h1.length > 0) ? textSection.h1[0] :
-                (textSection.h2.length > 0) ? textSection.h2[0] :
-                    (textSection.h3.length > 0) ? textSection.h3[0] :
-                        (textSection.h4.length > 0) ? textSection.h4[0] : ""
+            (textSection.title.length > 0) ? textSection.title[0] :
+                (textSection.h1.length > 0) ? textSection.h1[0] :
+                    (textSection.h2.length > 0) ? textSection.h2[0] :
+                        (textSection.h3.length > 0) ? textSection.h3[0] :
+                            (textSection.h4.length > 0) ? textSection.h4[0] : ""
 
         textSummary.resume = (textSection.metaDescription.length > 0) ? textSection.metaDescription[0] :
             SummaryService.biggerText(
