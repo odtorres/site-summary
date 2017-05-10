@@ -36,7 +36,7 @@ module.exports = {
                     FullSourceService.getFullSource({ url: options.url }, (result) => {
 
                         done({
-                            date_published: text.time,//fix that
+                            datePublished: text.time,//fix that
                             lead_image_url: images[0],
                             url: res.options.uri,//currentUrl.href,
                             next_page_url: null,
@@ -45,7 +45,7 @@ module.exports = {
                             total_pages: 1,
                             title: text.title,
                             author: text.author,
-                            userSynopsis: text.resume,
+                            snippet: text.resume,
                             content: result,
                             keywords: text.keywords,
                             word_count: text.all.length//TODO:fix that shit
