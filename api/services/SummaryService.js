@@ -6,6 +6,10 @@
 let Crawler = require("crawler")
 let url = require('url')
 var moment = require('moment');
+request = require('request').defaults({maxRedirects:Infinity})
+require('events').EventEmitter.prototype._maxListeners = Infinity;
+
+//require('events').EventEmitter.prototype.setMaxListeners(0)
 
 module.exports = {
 
@@ -15,11 +19,15 @@ module.exports = {
             userAgent: "oscarCrawler",
             retries: 0,
             retryTimeout: 10000,
+            timeout: 120000,
             skipDuplicates: false,
             priorityRange: 10,
             callback: function (error, res, callbackDone) {
                 try {
                     if (error) {
+                        //sails.log("Callback Error: ",error)
+                        //sails.log("Callback res: ",res)
+                        //RedirectService.request({url : res.options.uri})
                         done(error);
                         return;
                     }
@@ -62,8 +70,9 @@ module.exports = {
 
         crawler.queue({
             uri: options.url,
-            priority: 5
-        })
+            priority: 5,
+            jar: true
+        })        
     },
     siteSummaryText: function (options, done) {
         let $ = options.$

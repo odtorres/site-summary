@@ -18,6 +18,7 @@ module.exports = {
             callback: function (error, res, callbackDone) {
                 try {
                     if (error) {
+                        sails.log("Error Full source:", error)
                         done(error);
                         return;
                     }
@@ -67,7 +68,7 @@ module.exports = {
 
 
                 } catch (ex) {
-                    sails.log(ex)
+                    sails.log("Exception Full source:", ex)
                     done("Server Error")
                 }
                 callbackDone()
@@ -76,7 +77,8 @@ module.exports = {
 
         crawler.queue({
             uri: options.url,
-            priority: 5
+            priority: 5,
+            jar: true
         })
     }
 }
