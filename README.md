@@ -7,5 +7,5 @@
 
 ## Test 
 ```
-curl --data "http://someUrl" http://localhost:1337/
+curl --data "url=http://someUrl" http://localhost:1337/
 ```
