@@ -42,7 +42,7 @@ module.exports = {
 
                         done({
                             datePublished: text.time,//fix that
-                            lead_image_url: images[0],
+                            lead_image_url: (text.images) ? text.images[0] : images[0],
                             url: res.options.uri,//currentUrl.href,
                             next_page_url: null,
                             rendered_pages: 1,
@@ -82,6 +82,9 @@ module.exports = {
         textSection.h2 = SummaryService.sectionSummaryText({ $: $, section: "h2" })
         textSection.h3 = SummaryService.sectionSummaryText({ $: $, section: "h3" })
         textSection.h4 = SummaryService.sectionSummaryText({ $: $, section: "h4" })
+        //image               
+        textSection.metaImage = SummaryService.sectionMeta({ $: $, section: "image" })
+        textSection.contentImage = SummaryService.sectionImage({ $: $, section: "[id*='content'] img" })
 
         //date
         textSection.time = SummaryService.sectionTime({ $: $, section: "time" })
@@ -132,6 +135,11 @@ module.exports = {
 
         textSummary.keywords = SummaryService.sectionMeta({ $: $, section: "keywords" })
 
+        textSummary.images = (textSection.metaImage.length != 0) ? textSection.metaImage :
+            (textSection.contentImage != 0) ? textSection.contentImage : undefined
+
+        sails.log("textSummary.images : ", textSummary.images)
+
         return textSummary
     },
     sectionSummaryText: function (options, done) {
@@ -151,6 +159,15 @@ module.exports = {
                     textSumary.push(text)
             })
         }
+        return textSumary
+    },
+    sectionImage: function (options, done) {
+        let $ = options.$
+        let textSumary = []
+        $(options.section).each((index, e) => {
+            textSumary.push(e.attribs.src)
+        })
+
         return textSumary
     },
     sectionTime: function (options, done) {
