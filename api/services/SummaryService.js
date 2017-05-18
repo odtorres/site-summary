@@ -84,7 +84,7 @@ module.exports = {
         textSection.h4 = SummaryService.sectionSummaryText({ $: $, section: "h4" })
         //image               
         textSection.metaImage = SummaryService.sectionMeta({ $: $, section: "image" })
-        textSection.contentImage = SummaryService.sectionImage({ $: $, section: "[id*='content'] img" })
+        textSection.contentImage = SummaryService.sectionImage({ $: $, section: "[id*='content'] img , [id*='main'] img" })
 
         //date
         textSection.time = SummaryService.sectionTime({ $: $, section: "time" })
@@ -137,9 +137,7 @@ module.exports = {
 
         textSummary.images = (textSection.metaImage.length != 0) ? textSection.metaImage :
             (textSection.contentImage != 0) ? textSection.contentImage : undefined
-
-        sails.log("textSummary.images : ", textSummary.images)
-
+            
         return textSummary
     },
     sectionSummaryText: function (options, done) {
