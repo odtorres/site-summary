@@ -6,7 +6,7 @@
 let Crawler = require("crawler")
 let url = require('url')
 var moment = require('moment');
-request = require('request').defaults({maxRedirects:Infinity})
+request = require('request').defaults({ maxRedirects: Infinity })
 require('events').EventEmitter.prototype._maxListeners = Infinity;
 
 //require('events').EventEmitter.prototype.setMaxListeners(0)
@@ -41,7 +41,7 @@ module.exports = {
                             images.push(url.resolve(res.options.uri, e.attribs.src))
                         }
                     })
-                    FullSourceService.getFullSource({ url: options.url }, (result) => {
+                    FullSourceService.getFullSource({ url: options.url, res: res }, (result) => {
 
                         done({
                             datePublished: text.time,//fix that
@@ -72,7 +72,7 @@ module.exports = {
             uri: options.url,
             priority: 5,
             jar: true
-        })        
+        })
     },
     siteSummaryText: function (options, done) {
         let $ = options.$
@@ -93,8 +93,7 @@ module.exports = {
 
         //author
         textSection.metaAuthor = SummaryService.sectionMeta({ $: $, section: "author" })
-        textSection.author = SummaryService.sectionSummaryText({ $: $, section: '[class*="author"]' })
-
+        textSection.author = SummaryService.sectionSummaryText({ $: $, section: '[class*="author"]' })        
         // description
         textSection.metaDescription = SummaryService.sectionMeta({ $: $, section: "description" })
         textSection.summary = SummaryService.sectionSummaryText({ $: $, section: "summary" })
@@ -141,9 +140,13 @@ module.exports = {
     sectionSummaryText: function (options, done) {
         let $ = options.$
         let textSumary = []
+        /*if (options.section == '[class*="author"]')
+            sails.log(options.section, " ", $(options.section)[0].remove("script").html())*/
+
         if ($(options.section).text() != "") {
             $(options.section).each((index, e) => {
-                let text = $(e).text().trim()
+                $(e).find('script').empty()
+                let text = $(e).remove("script").text().trim()
                     .replace(new RegExp("\n", "g"), "")
                     .replace(new RegExp("\t", "g"), "")
                     .replace(new RegExp("  ", "g"), " ")
@@ -203,10 +206,15 @@ module.exports = {
             return ""
     },
     format: function (time = null) {
-        if (moment(time).isValid()) {
-            return moment(time).format("MM-DD-YYYY")
-        } else {
-            return undefined
+        try {
+            if (moment(time).isValid()) {
+                return moment(time).format("MM-DD-YYYY")
+            } else {
+                return undefined
+            }
+        } catch (error) {
+            //sails.log(error)
         }
+
     }
 }
