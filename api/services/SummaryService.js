@@ -25,9 +25,6 @@ module.exports = {
             callback: function (error, res, callbackDone) {
                 try {
                     if (error) {
-                        //sails.log("Callback Error: ",error)
-                        //sails.log("Callback res: ",res)
-                        //RedirectService.request({url : res.options.uri})
                         done(error);
                         return;
                     }
@@ -93,7 +90,7 @@ module.exports = {
 
         //author
         textSection.metaAuthor = SummaryService.sectionMeta({ $: $, section: "author" })
-        textSection.author = SummaryService.sectionSummaryText({ $: $, section: '[class*="author"]' })        
+        textSection.author = SummaryService.sectionSummaryText({ $: $, section: '[class*="author"]' })
         // description
         textSection.metaDescription = SummaryService.sectionMeta({ $: $, section: "description" })
         textSection.summary = SummaryService.sectionSummaryText({ $: $, section: "summary" })
