@@ -64,9 +64,10 @@ module.exports = {
                 callbackDone()
             }
         })
-
+        //?_escaped_fragment_=
+        let baseUrl = (options.url.indexOf("?") != -1) ? (options.url + "&_escaped_fragment_=") : (options.url + "?_escaped_fragment_=")
         crawler.queue({
-            uri: options.url,
+            uri: baseUrl,
             priority: 5,
             jar: true
         })
@@ -137,7 +138,7 @@ module.exports = {
 
         textSummary.images = (textSection.metaImage.length != 0) ? textSection.metaImage :
             (textSection.contentImage != 0) ? textSection.contentImage : undefined
-            
+
         return textSummary
     },
     sectionSummaryText: function (options, done) {
