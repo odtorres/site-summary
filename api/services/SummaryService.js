@@ -64,7 +64,7 @@ module.exports = {
                 callbackDone()
             }
         })
-        //?_escaped_fragment_=
+        //adding prerender ?_escaped_fragment_=
         let baseUrl = (options.url.indexOf("?") != -1) ? (options.url + "&_escaped_fragment_=") : (options.url + "?_escaped_fragment_=")
         crawler.queue({
             uri: baseUrl,
