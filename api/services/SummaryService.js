@@ -44,6 +44,7 @@ module.exports = {
                             datePublished: text.time,//fix that
                             lead_image_url: (text.images) ? text.images[0] : images[0],
                             url: res.options.uri,//currentUrl.href,
+                            source : currentUrl.hostname,
                             next_page_url: null,
                             rendered_pages: 1,
                             rendered_pages: 1,
