@@ -23,40 +23,49 @@ module.exports = {
             skipDuplicates: false,
             priorityRange: 10,
             callback: function (error, res, callbackDone) {
+                
                 try {
                     if (error) {
                         done(error);
                         return;
                     }
-                    var $ = res.$
-                    let images = []
-                    const currentUrl = url.parse(res.options.uri)
-                    let text = SummaryService.siteSummaryText({ $: $, url: currentUrl.hostname })
+                    let contentType = res.headers["content-type"]
+                    console.log(contentType)
+                    if (contentType.substring(contentType.indexOf("/") + 1, contentType.length).indexOf("html")!=-1) {
+                        var $ = res.$
+                        let images = []
+                        const currentUrl = url.parse(res.options.uri)
+                        let text = SummaryService.siteSummaryText({ $: $, url: currentUrl.hostname })
 
-                    $("img").each((index, e) => {
-                        if (res.options.uri && e.attribs.src) {
-                            images.push(url.resolve(res.options.uri, e.attribs.src))
-                        }
-                    })
-                    FullSourceService.getFullSource({ url: options.url, res: res }, (result) => {
-
-                        done({
-                            datePublished: text.time,//fix that
-                            lead_image_url: (text.images) ? text.images[0] : images[0],
-                            url: res.options.uri,//currentUrl.href,
-                            source : currentUrl.hostname,
-                            next_page_url: null,
-                            rendered_pages: 1,
-                            rendered_pages: 1,
-                            total_pages: 1,
-                            title: text.title,
-                            author: text.author,
-                            snippet: text.resume,
-                            content: result,
-                            keywords: text.keywords,
-                            word_count: text.all.length//TODO:fix that shit
+                        $("img").each((index, e) => {
+                            if (res.options.uri && e.attribs.src) {
+                                images.push(url.resolve(res.options.uri, e.attribs.src))
+                            }
                         })
-                    })
+                        FullSourceService.getFullSource({ url: options.url, res: res }, (result) => {
+
+                            done({
+                                datePublished: text.time,//fix that
+                                lead_image_url: (text.images) ? text.images[0] : images[0],
+                                url: res.options.uri,//currentUrl.href,
+                                source: currentUrl.hostname,
+                                next_page_url: null,
+                                rendered_pages: 1,
+                                rendered_pages: 1,
+                                total_pages: 1,
+                                title: text.title,
+                                author: text.author,
+                                snippet: text.resume,
+                                content: result,
+                                keywords: text.keywords,
+                                word_count: text.all.length//TODO:fix that shit
+                            })
+                        })
+                    }else{
+                        //file
+                        done("We are working in file Summary...")
+                    }
+
 
                 } catch (ex) {
                     sails.log(ex)
@@ -66,7 +75,7 @@ module.exports = {
             }
         })
         //adding prerender ?_escaped_fragment_=
-        let baseUrl = (options.url.indexOf("?") != -1) ? (options.url + "&_escaped_fragment_=") : (options.url + "?_escaped_fragment_=")
+        let baseUrl = options.url//(options.url.indexOf("?") != -1) ? (options.url + "&_escaped_fragment_=") : (options.url + "?_escaped_fragment_=")
         crawler.queue({
             uri: baseUrl,
             priority: 5,
