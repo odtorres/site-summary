@@ -22,8 +22,9 @@ module.exports = {
             timeout: 120000,
             skipDuplicates: false,
             priorityRange: 10,
+            secondRequest: false,
             callback: function (error, res, callbackDone) {
-                
+
                 try {
                     if (error) {
                         done(error);
@@ -31,7 +32,7 @@ module.exports = {
                     }
                     let contentType = res.headers["content-type"]
                     console.log(contentType)
-                    if (contentType.substring(contentType.indexOf("/") + 1, contentType.length).indexOf("html")!=-1) {
+                    if (contentType.substring(contentType.indexOf("/") + 1, contentType.length).indexOf("html") != -1) {
                         var $ = res.$
                         let images = []
                         const currentUrl = url.parse(res.options.uri)
@@ -43,8 +44,7 @@ module.exports = {
                             }
                         })
                         FullSourceService.getFullSource({ url: options.url, res: res }, (result) => {
-
-                            done({
+                            let summaryResponse = {
                                 datePublished: text.time,//fix that
                                 lead_image_url: (text.images) ? text.images[0] : images[0],
                                 url: res.options.uri,//currentUrl.href,
@@ -59,9 +59,20 @@ module.exports = {
                                 content: result,
                                 keywords: text.keywords,
                                 word_count: text.all.length//TODO:fix that shit
-                            })
+                            }
+                            if (!SPAAnalysisService.isResumenSpaPage(summaryResponse) || res.options.secondRequest) {
+                                done(summaryResponse)
+                            } else {
+                                let lastBaseUrl = (options.url.indexOf("?") != -1) ? (options.url + "&_escaped_fragment_=") : (options.url + "?_escaped_fragment_=")
+                                crawler.queue({
+                                    uri: lastBaseUrl,
+                                    priority: 5,
+                                    jar: true,
+                                    secondRequest: true
+                                })
+                            }
                         })
-                    }else{
+                    } else {
                         //file
                         done("We are working in file Summary...")
                     }
