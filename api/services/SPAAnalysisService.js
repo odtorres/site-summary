@@ -10,15 +10,15 @@ module.exports = {
      */
     isResumenSpaPage: function (options) {
         console.log(options)
-        if (options.lead_image_url.indexOf("{{") != -1 &&
+        if (options.lead_image_url && options.lead_image_url.indexOf("{{") != -1 &&
             options.lead_image_url.indexOf("}}") != -1) {
             return true
         }
-        if (options.title.indexOf("{{") != -1 &&
+        if (options.title && options.title.indexOf("{{") != -1 &&
             options.title.indexOf("}}") != -1) {
             return true
         }
-        if (options.snippet.indexOf("{{") != -1 &&
+        if (options.snippet && options.snippet.indexOf("{{") != -1 &&
             options.snippet.indexOf("}}") != -1) {
             return true
         }
