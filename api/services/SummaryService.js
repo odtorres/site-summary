@@ -43,10 +43,17 @@ module.exports = {
                                 images.push(url.resolve(res.options.uri, e.attribs.src))
                             }
                         })
+
+                        let principalImage = (text.images) ? text.images[0] : images[0]
+
+                        if (principalImage.indexOf("http") == -1) {
+                            principalImage = url.resolve(res.options.uri, principalImage)
+                        }
+
                         FullSourceService.getFullSource({ url: options.url, res: res }, (result) => {
                             let summaryResponse = {
                                 datePublished: text.time,//fix that
-                                lead_image_url: (text.images) ? text.images[0] : images[0],
+                                lead_image_url: principalImage,
                                 url: res.options.uri,//currentUrl.href,
                                 source: currentUrl.hostname,
                                 next_page_url: null,
