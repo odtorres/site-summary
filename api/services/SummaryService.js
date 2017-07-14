@@ -40,7 +40,13 @@ module.exports = {
 
                         $("img").each((index, e) => {
                             if (res.options.uri && e.attribs.src) {
-                                images.push(url.resolve(res.options.uri, e.attribs.src))
+                                if (e.attribs.width) {
+                                    if ((+e.attribs.width) > 200) {
+                                        images.push(url.resolve(res.options.uri, e.attribs.src))
+                                    }
+                                } else {
+                                    images.push(url.resolve(res.options.uri, e.attribs.src))
+                                }
                             }
                         })
 
