@@ -26,7 +26,10 @@ module.exports = {
             callback: function (error, res, callbackDone) {
                 try {
                     if (error) {
-                        done({ error: error });
+                        if (error.code)
+                            done({ error: error.code })
+                        else
+                            done({ error: error })
                         return;
                     }
                     let contentType = res.headers["content-type"]
