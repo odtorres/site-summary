@@ -14,7 +14,7 @@ module.exports = {
                 return res.json(result)
             })
         } else {
-            res.json("Please give me some url")
+            res.json({ error: "Please give me some url" })
         }
     },
     full: function (req, res) {
@@ -25,7 +25,7 @@ module.exports = {
                 return res.ok(result)
             })
         } else {
-            res.ok("Please give me some url")
+            res.json({ error: "Please give me some url" })
         }
     }
 }

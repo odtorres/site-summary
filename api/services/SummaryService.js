@@ -24,10 +24,9 @@ module.exports = {
             priorityRange: 10,
             secondRequest: false,
             callback: function (error, res, callbackDone) {
-
                 try {
                     if (error) {
-                        done(error);
+                        done({ error: error });
                         return;
                     }
                     let contentType = res.headers["content-type"]
@@ -75,13 +74,13 @@ module.exports = {
                         })
                     } else {
                         //file
-                        done("We are working in file Summary...")
+                        done({ error: "We are working in file Summary..." })
                     }
 
 
                 } catch (ex) {
                     sails.log(ex)
-                    done("Server Error")
+                    done({ error: "Time out response" })
                 }
                 callbackDone()
             }
@@ -167,7 +166,7 @@ module.exports = {
 
         setTimeout(() => {
             console.log("=======================================")
-            console.log(textSection.metaImage, "====", textSection.contentImage, "=====",textSection.contentClassImage,"=====", textSection.allImage)
+            console.log(textSection.metaImage, "====", textSection.contentImage, "=====", textSection.contentClassImage, "=====", textSection.allImage)
             console.log("=======================================")
         }, 1000)
 
