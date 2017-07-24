@@ -38,21 +38,9 @@ module.exports = {
                         const currentUrl = url.parse(res.options.uri)
                         let text = SummaryService.siteSummaryText({ $: $, url: currentUrl.hostname })
 
-                        $("img").each((index, e) => {
-                            if (res.options.uri && e.attribs.src) {
-                                if (e.attribs.width) {
-                                    if ((+e.attribs.width) > 200) {
-                                        images.push(url.resolve(res.options.uri, e.attribs.src))
-                                    }
-                                } else {
-                                    images.push(url.resolve(res.options.uri, e.attribs.src))
-                                }
-                            }
-                        })
+                        let principalImage = (text.images) ? text.images[0] : (images) ? images[0] : undefined
 
-                        let principalImage = (text.images) ? text.images[0] : images[0]
-
-                        if (principalImage.indexOf("http") == -1) {
+                        if (principalImage && principalImage.indexOf("http") == -1) {
                             principalImage = url.resolve(res.options.uri, principalImage)
                         }
 
@@ -119,7 +107,9 @@ module.exports = {
         textSection.h4 = SummaryService.sectionSummaryText({ $: $, section: "h4" })
         //image               
         textSection.metaImage = SummaryService.sectionMeta({ $: $, section: "image" })
-        textSection.contentImage = SummaryService.sectionImage({ $: $, section: "[id*='content'] img , [id*='main'] img" })
+        textSection.contentImage = SummaryService.sectionImage({ $: $, section: "[id*='content'] img , [id*='main'] img", uri: options.url })
+        textSection.contentClassImage = SummaryService.sectionImage({ $: $, section: "[class*='content'] img , [class*='main'] img", uri: options.url })
+        textSection.allImage = SummaryService.sectionImage({ $: $, section: "img", uri: options.url })
 
         //date
         textSection.time = SummaryService.sectionTime({ $: $, section: "time" })
@@ -171,7 +161,15 @@ module.exports = {
         textSummary.keywords = SummaryService.sectionMeta({ $: $, section: "keywords" })
 
         textSummary.images = (textSection.metaImage.length != 0) ? textSection.metaImage :
-            (textSection.contentImage != 0) ? textSection.contentImage : undefined
+            (textSection.contentImage.length != 0) ? textSection.contentImage :
+                (textSection.contentClassImage.length != 0) ? textSection.contentClassImage :
+                    (textSection.allImage.length != 0) ? textSection.allImage : undefined
+
+        setTimeout(() => {
+            console.log("=======================================")
+            console.log(textSection.metaImage, "====", textSection.contentImage, "=====",textSection.contentClassImage,"=====", textSection.allImage)
+            console.log("=======================================")
+        }, 1000)
 
         return textSummary
     },
@@ -198,9 +196,36 @@ module.exports = {
         let $ = options.$
         let textSumary = []
         $(options.section).each((index, e) => {
-            textSumary.push(e.attribs.src)
-        })
 
+            if (options.uri && e.attribs.src) {
+                console.log("IMG: ", url.resolve(options.uri, e.attribs.src))
+                console.log("result: ", e.attribs.src.indexOf("favicon"))
+                if (e.attribs.src.indexOf("favicon") == -1) {
+                    console.log("IMG: ", url.resolve(options.uri, e.attribs.src))
+                    if (e.attribs.width && e.attribs.height) {
+                        setTimeout(() => {
+                            console.log("=======================================")
+                            console.log(e.attribs.width, "====", e.attribs.height)
+                            console.log("=======================================")
+                        }, 1000)
+                        if ((+e.attribs.width) > 150 && (+e.attribs.height) > 150) {
+                            textSumary.push(url.resolve(options.uri, e.attribs.src))
+                        }
+                    } else if (e.attribs.width) {
+                        if ((+e.attribs.width) > 150) {
+                            textSumary.push(url.resolve(options.uri, e.attribs.src))
+                        }
+                    } else if (e.attribs.height) {
+                        if ((+e.attribs.height) > 150) {
+                            textSumary.push(url.resolve(options.uri, e.attribs.src))
+                        }
+                    } else {
+                        textSumary.push(url.resolve(options.uri, e.attribs.src))
+                    }
+                }
+
+            }
+        })
         return textSumary
     },
     sectionTime: function (options, done) {
