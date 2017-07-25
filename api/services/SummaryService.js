@@ -197,6 +197,7 @@ module.exports = {
     sectionImage: function (options, done) {
         let $ = options.$
         let textSumary = []
+        let imageWithOutSize = []
         let ImageSize = 140
         $(options.section).each((index, e) => {
 
@@ -223,13 +224,13 @@ module.exports = {
                             textSumary.push(url.resolve(options.uri, e.attribs.src))
                         }
                     } else {
-                        textSumary.push(url.resolve(options.uri, e.attribs.src))
+                        imageWithOutSize.push(url.resolve(options.uri, e.attribs.src))
                     }
                 }
 
             }
         })
-        return textSumary
+        return textSumary.concat(imageWithOutSize)
     },
     sectionTime: function (options, done) {
         let $ = options.$
