@@ -197,6 +197,7 @@ module.exports = {
     sectionImage: function (options, done) {
         let $ = options.$
         let textSumary = []
+        let ImageSize = 140
         $(options.section).each((index, e) => {
 
             if (options.uri && e.attribs.src) {
@@ -210,15 +211,15 @@ module.exports = {
                             console.log(e.attribs.width, "====", e.attribs.height)
                             console.log("=======================================")
                         }, 1000)
-                        if ((+e.attribs.width) > 150 && (+e.attribs.height) > 150) {
+                        if ((+e.attribs.width) > ImageSize && (+e.attribs.height) > ImageSize) {
                             textSumary.push(url.resolve(options.uri, e.attribs.src))
                         }
                     } else if (e.attribs.width) {
-                        if ((+e.attribs.width) > 150) {
+                        if ((+e.attribs.width) > ImageSize) {
                             textSumary.push(url.resolve(options.uri, e.attribs.src))
                         }
                     } else if (e.attribs.height) {
-                        if ((+e.attribs.height) > 150) {
+                        if ((+e.attribs.height) > ImageSize) {
                             textSumary.push(url.resolve(options.uri, e.attribs.src))
                         }
                     } else {
